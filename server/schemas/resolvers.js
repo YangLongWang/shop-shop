@@ -1,7 +1,8 @@
 const { AuthenticationError } = require("apollo-server-express");
 const { User, Product, Category, Order } = require("../models");
 const { signToken } = require("../utils/auth");
-const stripe = require("stripe")("sk_test_Hrs6SAopgFPF0bZXSN3f6ELN");
+const stripe = require("stripe")("sk_test_4eC39HqLyjWDarjtT1zdp7dc");
+// const stripe = require("stripe")("sk_test_Hrs6SAopgFPF0bZXSN3f6ELN");
 // process.env.STRIPE_KEY
 
 const resolvers = {
@@ -55,6 +56,7 @@ const resolvers = {
     },
     checkout: async (parent, args, context) => {
       const url = new URL(context.headers.referer).origin;
+      // const url = "https://localhost:3001";
       const order = new Order({ products: args.products });
       const line_items = [];
 
@@ -88,6 +90,9 @@ const resolvers = {
         mode: "payment",
         success_url: `${url}/success?session_id={CHECKOUT_SESSION_ID}`,
         cancel_url: `${url}/`,
+        // success_url:
+        //   "https://example.com/success?session_id={CHECKOUT_SESSION_ID}",
+        // cancel_url: "https://example.com/cancel",
       });
 
       return { session: session.id };
